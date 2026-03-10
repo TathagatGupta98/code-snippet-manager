@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar"
 import { useState } from 'react'
 import RateLimitedUI from '../components/RateLimitedUI';
 import { useEffect } from 'react';
+import axios from 'axios';
 
 const HomePage = () => {
 
@@ -13,7 +14,8 @@ const HomePage = () => {
     useEffect(() => {
         const fetchSnippets = async () => {
             try {
-                const res = await fetch("https://localhost5001/api/snippets")
+                const res = await axios.post("https://localhost5001/api/snippets");
+                console.log(res.data);
             } catch (error) {
                 console.log("Error fetching the notes")
             }
