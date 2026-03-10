@@ -3,10 +3,13 @@ const cors = require("cors");
 require("dotenv").config();
 
 const snippetRoutes = require("./routes/snippetRoutes");
+const { default: rateLimiter } = require("./middleware/rateLimiter");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+app.use(rateLimiter)
 
 app.use("/api/snippets", snippetRoutes);
 
