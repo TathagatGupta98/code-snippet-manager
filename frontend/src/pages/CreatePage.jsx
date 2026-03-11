@@ -4,37 +4,36 @@ import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router";
 import api from "../lib/axios";
 
+const LANGUAGES = [
+  "javascript", "typescript", "python", "java", "c++",
+  "c#", "go", "rust", "php", "ruby", "swift", "kotlin", "other"
+];
+
 const CreatePage = () => {
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [language, setLanguage] = useState("javascript");
+  const [code, setCode] = useState("");
+  const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
-
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!title.trim() || !content.trim()) {
-      toast.error("All fields are required");
+    if (!title.trim() || !code.trim()) {
+      toast.error("Title and code are required");
       return;
     }
 
     setLoading(true);
     try {
-      await api.post("/snippets", {
-        title,
-        content,
-      });
-
+      await api.post("/snippets", { title, language, code, description });
       toast.success("Snippet created successfully!");
       navigate("/");
     } catch (error) {
       console.log("Error creating snippet", error);
-      if (error.response.status === 429) {
-        toast.error("Slow down! You're creating snippets too fast", {
-          duration: 4000,
-          icon: "💀",
-        });
+      if (error.response?.status === 429) {
+        toast.error("Slow down! Too many requests", { duration: 4000, icon: "💀" });
       } else {
         toast.error("Failed to create snippet");
       }
@@ -48,21 +47,19 @@ const CreatePage = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
           <Link to={"/"} className="btn btn-ghost mb-6">
-            <ArrowLeftIcon className="size-5" />
-            Back to Snippets
+            <ArrowLeftIcon className="size-5" /> Back to Snippets
           </Link>
 
           <div className="card bg-base-100">
             <div className="card-body">
               <h2 className="card-title text-2xl mb-4">Create New Snippet</h2>
               <form onSubmit={handleSubmit}>
+
                 <div className="form-control mb-4">
-                  <label className="label">
-                    <span className="label-text">Title</span>
-                  </label>
+                  <label className="label"><span className="label-text">Title</span></label>
                   <input
                     type="text"
-                    placeholder="Snippet Title"
+                    placeholder="e.g. Fetch API wrapper"
                     className="input input-bordered"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
@@ -70,14 +67,38 @@ const CreatePage = () => {
                 </div>
 
                 <div className="form-control mb-4">
-                  <label className="label">
-                    <span className="label-text">Content</span>
-                  </label>
+                  <label className="label"><span className="label-text">Language</span></label>
+                  <select
+                    className="select select-bordered"
+                    value={language}
+                    onChange={(e) => setLanguage(e.target.value)}
+                  >
+                    {LANGUAGES.map((lang) => (
+                      <option key={lang} value={lang}>{lang}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-control mb-4">
+                  <label className="label"><span className="label-text">Code</span></label>
                   <textarea
-                    placeholder="Write your snippet here..."
-                    className="textarea textarea-bordered h-32"
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
+                    placeholder="Paste your code here..."
+                    className="textarea textarea-bordered h-40 font-mono text-sm"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                  />
+                </div>
+
+                <div className="form-control mb-4">
+                  <label className="label">
+                    <span className="label-text">Description <span className="text-base-content/50">(optional)</span></span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="What does this snippet do?"
+                    className="input input-bordered"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
                   />
                 </div>
 
@@ -86,6 +107,7 @@ const CreatePage = () => {
                     {loading ? "Creating..." : "Create Snippet"}
                   </button>
                 </div>
+
               </form>
             </div>
           </div>
@@ -94,4 +116,5 @@ const CreatePage = () => {
     </div>
   );
 };
+
 export default CreatePage;

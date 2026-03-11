@@ -3,14 +3,17 @@ const cors = require("cors");
 require("dotenv").config();
 
 const snippetRoutes = require("./routes/snippetRoutes");
-const { default: rateLimiter } = require("./middleware/rateLimiter");
+const rateLimiter = require("./middleware/rateLimiter");
 
 const app = express();
-app.use(cors());
+
+app.use(cors({
+  origin: "http://localhost:5174",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type"],
+}));
 app.use(express.json());
-
-app.use(rateLimiter)
-
+app.use(rateLimiter);
 app.use("/api/snippets", snippetRoutes);
 
 const PORT = process.env.PORT || 5000;

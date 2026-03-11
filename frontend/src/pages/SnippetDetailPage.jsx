@@ -106,12 +106,18 @@ const SnippetDetailPage = () => {
                   <span className="label-text">Content</span>
                 </label>
                 <textarea
-                  placeholder="Write your snippet here..."
-                  className="textarea textarea-bordered h-32"
-                  value={snippet.content}
-                  onChange={(e) => setSnippet({ ...snippet, content: e.target.value })}
+                  placeholder="Your code here..."
+                  className="textarea textarea-bordered h-40 font-mono text-sm"
+                  value={snippet.code || ""}
+                  onChange={(e) => setSnippet({ ...snippet, code: e.target.value })}
                 />
               </div>
+              <input
+                type="text"
+                className="input input-bordered"
+                value={snippet.language || ""}
+                onChange={(e) => setSnippet({ ...snippet, language: e.target.value })}
+              />
 
               <div className="card-actions justify-end">
                 <button className="btn btn-primary" disabled={saving} onClick={handleSave}>
