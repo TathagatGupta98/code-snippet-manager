@@ -9,9 +9,8 @@ const app = express();
 
 app.use(cors({
   origin: [
-    "http://localhost:5173",
-    "code-snippet-manager-39bf-git-main-tathagat-guptas-projects.vercel.app",
-    "https://code-snippet-manager-39bf.vercel.app/"
+    "http://localhost:5173", 
+    /^https:\/\/.*\.vercel\.app$/ 
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type"],
