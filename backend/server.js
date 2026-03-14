@@ -8,7 +8,10 @@ const rateLimiter = require("./middleware/rateLimiter");
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: [
+    "http://localhost:5173",
+    "https://frontend-oq19gne9a-tathagat-guptas-projects.vercel.app"
+  ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type"],
 }));
